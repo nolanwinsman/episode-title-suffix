@@ -2,6 +2,7 @@
 	#1: add verification to subfolders that checks if they are seasons example 'Season 1' or 's1' 
 	#2: show the user information based on the IMDB search to verify it is the correct show. Information like cast, year, cover art
 	#3: make sure the extention is a valid video file extention based on what VLC is compatable with
+	#4: 
 
 import os
 from os.path import basename
