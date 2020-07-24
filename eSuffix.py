@@ -2,7 +2,7 @@
 	#1: add verification to subfolders that checks if they are seasons example 'Season 1' or 's1' 
 	#2: show the user information based on the IMDB search to verify it is the correct show. Information like cast, year, cover art
 	#3: make sure the extention is a valid video file extention based on what VLC is compatable with
-	#4: 
+	#4:
 
 import os
 from os.path import basename
@@ -68,7 +68,7 @@ def testRun(series, sNum, originalDir):
 		epCount = len(series['episodes'][s]) #retrieves the number of episodes in s season
 		print(f'-----Season {s}-----') #prints the season number
 		for e in range(1,epCount+1): #for loop that goes through each episode
-			episodeName = (series['episodes'][s][e]) #retrieves the episode name in season s episode e
+			episodeName = removeInvalidChar((series['episodes'][s][e]),invalidChars) #retrieves the episode name in season s episode e and removes illegal chars
 			file = fileName(series,s,e,extention) #gets the name of the file
 			print(combineName(file, episodeName)) #prints what the file will look like with the episode name as the suffix
 	verify_with_user()
@@ -81,22 +81,29 @@ def renameFiles(series, sNum, originalDir):
 		extention = findExtention(os.getcwd()) #finds the extention for the files
 		epCount = len(series['episodes'][s]) #retrieves the number of episodes in s season
 		for e in range(1,epCount+1): #for loop that goes through each episode
-			episodeName = (series['episodes'][s][e]) #retrieves the episode name in season s episode e
+			episodeName = removeInvalidChar((series['episodes'][s][e]),invalidChars) #retrieves the episode name in season s episode e
 			file = fileName(series,s,e,extention) #gets the name of the file
-			#print(combineName(file, episodeName)) #prints what the finished file will look like
 			os.rename(file, combineName(file, episodeName)) #renames the file with the episode suffix		
 	os.chdir(originalDir) #sets the directory to the directory used when the program is called
-	
-originalDir = os.getcwd() #current directory
 
+#In windows you can't name files with certain chars, chars like ':' so this function removes any of those illegal chars 
+def removeInvalidChar(episodeName, invalid_chars):
+	episodeName = str(episodeName) #makes the episodeName a string
+	for c in invalid_chars: #for loop that goes through illegal chars
+		episodeName = episodeName.replace(c,'') #replaces illegal char with empty space
+	return episodeName
+
+originalDir = os.getcwd() #current directory
 d = '.'	#https://www.tutorialspoint.com/How-to-get-a-list-of-all-sub-directories-in-the-current-directory-using-Python  --credit
 subdirs = [os.path.join(d, o) for o in os.listdir(d) if os.path.isdir(os.path.join(d,o))] #array of all immediate subdirectories
-
 showName = basename(originalDir) #gets the show name based on the current folder
+
+
 #extention = input('What is the file extention? For example .mp4 or .mkv include the period: ') #gets the file extention from the user
 
 series, sNum = seriesInfo(showName) #gets the series info set and the number of seasons
 ia.update(series, 'episodes') #fetches the episode infoset
 
+invalidChars = ['\\','/',':','*','?','"','<','>','|'] #list of illegal chars for Windows
 testRun(series, sNum, originalDir) #prints what the files will look like
 renameFiles(series, sNum, originalDir) #if the users accepts the file format it will rename all the files

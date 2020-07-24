@@ -2,6 +2,8 @@ import os
 from os.path import basename
 import string
 import imdb #run 'pip install IMDbPY' if you do not have the api
+from PIL import Image #pip install pillow
+import requests
 
 #this program creates season folders of a tv show in the plex format
 #and fills the season folders with mock episode files to test the eSuffixV2.py
@@ -13,9 +15,9 @@ def addToPath(currentDirectory, subFolder):
 	return "{currentDirectory}/{subFolder}".format(currentDirectory=currentDirectory, subFolder=subFolder)
 
 #uses the IMDB api to find and store information on the show
-def seriesInfo(showName):
+def seriesInfo(showName, r):
     series = ia.search_movie(showName) #searches for the series
-    id = series[0].getID() #stores the ID of the first result of the search
+    id = series[r].getID() #stores the ID of the first result of the search
     series = ia.get_movie(id) #gets the series
     numberOfSeasons = series['number of seasons'] #stores the number of seasons the series has
     return series,numberOfSeasons
@@ -45,13 +47,58 @@ def findExtention(directory):
 			name, ext = os.splitext(file)
 			print("extention = %s" % ext)
 			extentions.append(file)
-		
+
+#function that asks the user if the show found on IMDB is the correct one
+def verifySeries(showName,r):
+	if r > 9:	#(BASE CASE) recursively loops through the firt 10 IMDB search results
+		exit()
+	else:		#searches IMDB for the showName  
+		series = ia.search_movie(showName) #searches for the series
+		id = series[r].getID() #stores the ID of the r result of the search (if r == 0 it's the first result and so on)
+		series = ia.get_movie(id) #gets the series
+		if series['kind'] != 'tv series': #if the IMDB search result is not a TV show, try next result
+			print(r,') ',series,' Is not a TV show, trying next result in IMDB search')
+			verifySeries(showName,r+1)
+		else: #if the IMDB search result is a TV show, ask the user if it is the right show
+			displaySeriesInfo(series)
+			answer = yesNoExit(input('Is this the show you want? y for Yes, n for No e for Exit:')) #gets a yes or no from user
+			if answer == False:
+				verifySeries(showName,r+1)
+			else:
+				return r
+
+#prints a variety of information about the TV show
+def displaySeriesInfo(series):
+	print('-------------------------------')
+	print(series.keys())
+	print('TV show name		: ',series)
+	print('Released			: ',series['year'])
+	print('Number of seasons: ',series['number of seasons'])
+	displayCover(series)
+
+#function that displays the IMDB cover for the series
+def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow for this function 
+	coverURL = (series['cover url'])
+	im = Image.open(requests.get(coverURL, stream=True).raw)
+	im.show()
+
+#asks the user yes or no until until they respond with an appropriate string
+def yesNoExit(answer):
+	if answer == 'n' or answer == 'no' or answer == 'No' or answer == 'NO' or answer == 'N':
+		return False
+	elif answer == 'y' or answer == 'yes' or answer == 'Yes' or answer == 'YES' or answer == 'Y':
+		return True
+	elif answer == 'exit' or answer == 'Exit' or answer == 'EXIT' or answer == 'e' or answer == 'E':
+		exit()
+	else:
+		yesNo(input('Wrong input, type y for Yes, and n for No: '))
+	
 originalDir = os.getcwd() #current directory
 
 showName = basename(originalDir) #gets the show name based on the current folder
 extention = '.mkv' #the extention of the dummy files
-
-series, sNum = seriesInfo(showName) #gets the series info set and the number of seasons
+result = verifySeries(showName, 0)
+series, sNum = seriesInfo(showName, result) #gets the series info set and the number of seasons
 ia.update(series, 'episodes') #fetches the episode infoset
 createSeasonFolders(sNum)
 
