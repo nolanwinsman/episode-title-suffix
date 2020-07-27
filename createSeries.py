@@ -1,9 +1,12 @@
 import os
+from tkinter import *
 from os.path import basename
 import string
 import imdb #run 'pip install IMDbPY' if you do not have the api
-from PIL import Image #pip install pillow
+from PIL import ImageTk, Image  # pip install pillow
 import requests
+import pathlib
+import os
 
 #this program creates season folders of a tv show in the plex format
 #and fills the season folders with mock episode files to test the eSuffixV2.py
@@ -13,6 +16,7 @@ ia = imdb.IMDb() #calls the IMDb function to get an access object through which 
 #function that combines the directory name with the subfolder name so the subfolder is the new directory
 def addToPath(currentDirectory, subFolder):
 	return "{currentDirectory}/{subFolder}".format(currentDirectory=currentDirectory, subFolder=subFolder)
+	
 
 #uses the IMDB api to find and store information on the show
 def seriesInfo(showName, r):
@@ -39,9 +43,10 @@ def createSeasonFolders(s):
 		folderName = "{season} {x}".format(season = 'Season', x = x)
 		#print(folderName)
 		os.makedirs(folderName) #creates a folder for each season in the season	
-
+	
+	#finds the file extention
 def findExtention(directory):
-	extentions = []
+	extentions = [] #empty list that will hold extentions
 	for roots, dirs, files in os.walk(spath):
 		for file in files:
 			name, ext = os.splitext(file)
@@ -50,14 +55,14 @@ def findExtention(directory):
 
 #function that asks the user if the show found on IMDB is the correct one
 def verifySeries(showName,r):
-	if r > 9:	#(BASE CASE) recursively loops through the firt 10 IMDB search results
+	if r > 4:	#(BASE CASE) recursively loops through the firt 5 IMDB search results
 		exit()
 	else:		#searches IMDB for the showName  
 		series = ia.search_movie(showName) #searches for the series
 		id = series[r].getID() #stores the ID of the r result of the search (if r == 0 it's the first result and so on)
 		series = ia.get_movie(id) #gets the series
 		if series['kind'] != 'tv series': #if the IMDB search result is not a TV show, try next result
-			print(r,') ',series,' Is not a TV show, trying next result in IMDB search')
+			print(r,') ',series,' Is not a TV show, it is a',series['kind'],'trying next result in IMDB')
 			verifySeries(showName,r+1)
 		else: #if the IMDB search result is a TV show, ask the user if it is the right show
 			displaySeriesInfo(series)
@@ -67,22 +72,42 @@ def verifySeries(showName,r):
 			else:
 				return r
 
-#prints a variety of information about the TV show
-def displaySeriesInfo(series):
-	print('-------------------------------')
-	print(series.keys())
-	print('TV show name		: ',series)
-	print('Released			: ',series['year'])
-	print('Number of seasons: ',series['number of seasons'])
+	#prints a variety of information about the TV show
+def displaySeriesInfo(series): #not printing in a legible format, fix later
+	#print(series.keys())
+	print('----------')
+	print('TV show name		:',series)
+	print('Release year		:',series['year'])
+	print('Number of seasons	:',series['number of seasons'])
+	print('Cast 			:', end =' ') 
+	for x in range(2):
+		print(series['cast'][x], end =', ')
+	print(series['cast'][3])
 	displayCover(series)
 
-#function that displays the IMDB cover for the series
+	#function that displays the IMDB cover for the series
 def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow for this function 
-	coverURL = (series['cover url'])
-	im = Image.open(requests.get(coverURL, stream=True).raw)
-	im.show()
+	coverURL = series['cover url']
+	longName = series['long imdb title']
+	root.title(longName)
+	icoPath = 'C:\\Users\\Nolan\\Pictures\\Icons\\Misc' #path to my IMDB.ico
+	icon(icoPath)
+	canvas = Canvas(root, width = 500, height = 0)
+	canvas.pack()
+	my_img = ImageTk.PhotoImage(Image.open((requests.get(coverURL, stream=True).raw)))
+	my_label = Label(image=my_img)
+	my_label.pack()
+	root.mainloop()
 
-#asks the user yes or no until until they respond with an appropriate string
+def icon(p):
+	file = addToPath(p,'IMDB.ico')
+	path = pathlib.Path(file)
+	if path.exists() == True and path.is_file() == True:
+		root.iconbitmap(file)
+	else:
+		print('IMDB.ico not found')
+
+	#asks the user yes or no until until they respond with an appropriate string
 def yesNoExit(answer):
 	if answer == 'n' or answer == 'no' or answer == 'No' or answer == 'NO' or answer == 'N':
 		return False
@@ -91,10 +116,10 @@ def yesNoExit(answer):
 	elif answer == 'exit' or answer == 'Exit' or answer == 'EXIT' or answer == 'e' or answer == 'E':
 		exit()
 	else:
-		yesNo(input('Wrong input, type y for Yes, and n for No: '))
+		yesNoExit(input('Wrong input, type y for Yes, n for No, and e for Exit: '))
 	
 originalDir = os.getcwd() #current directory
-
+root = Tk()
 showName = basename(originalDir) #gets the show name based on the current folder
 extention = '.mkv' #the extention of the dummy files
 result = verifySeries(showName, 0)
