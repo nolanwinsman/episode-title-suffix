@@ -137,7 +137,7 @@ def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow
 	coverURL = series['cover url']
 	longName = series['long imdb title']
 	root.title(longName)
-	icoPath = 'C:\\Users\\Nolan\\Pictures\\Icons\\Misc' #path to my IMDB.ico
+	icoPath = '' #path to where your 'IMDB.ico' is, totally optional
 	icon(icoPath)
 	canvas = Canvas(root, width = 500, height = 0)
 	canvas.pack()
