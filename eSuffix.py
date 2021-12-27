@@ -147,10 +147,9 @@ def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow
 	root.mainloop()
 
 #if 'IMDB.ico' is found it will use it as the icon, if not the icon will be default
-def icon(p):
-	file = addToPath(p,'IMDB.ico')
-	path = pathlib.Path(file)
-	if path.exists() == True and path.is_file() == True:
+def icon():
+	file = 'IMDB.ico'
+	if os.path.isfile(file):
 		root.iconbitmap(file)
 	else:
 		print('IMDB.ico not found')

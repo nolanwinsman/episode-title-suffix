@@ -56,6 +56,7 @@ def findExtention(directory):
 #function that asks the user if the show found on IMDB is the correct one
 def verifySeries(showName,r):
 	if r > 4:	#(BASE CASE) recursively loops through the firt 5 IMDB search results
+		print('Series now found')
 		exit()
 	else:		#searches IMDB for the showName  
 		series = ia.search_movie(showName) #searches for the series
@@ -90,8 +91,7 @@ def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow
 	coverURL = series['cover url']
 	longName = series['long imdb title']
 	root.title(longName)
-	icoPath = 'C:\\Users\\Nolan\\Pictures\\Icons\\Misc' #path to my IMDB.ico
-	icon(icoPath)
+	icon()
 	canvas = Canvas(root, width = 500, height = 0)
 	canvas.pack()
 	my_img = ImageTk.PhotoImage(Image.open((requests.get(coverURL, stream=True).raw)))
@@ -99,10 +99,9 @@ def displayCover(series):#credit to user 'Giovanni Cappellotto' on StackOverflow
 	my_label.pack()
 	root.mainloop()
 
-def icon(p):
-	file = addToPath(p,'IMDB.ico')
-	path = pathlib.Path(file)
-	if path.exists() == True and path.is_file() == True:
+def icon():
+	file = 'IMDB.ico'
+	if os.path.isfile(file):
 		root.iconbitmap(file)
 	else:
 		print('IMDB.ico not found')
@@ -117,7 +116,9 @@ def yesNoExit(answer):
 		exit()
 	else:
 		yesNoExit(input('Wrong input, type y for Yes, n for No, and e for Exit: '))
-	
+
+OperatingSystem = os.name
+
 originalDir = os.getcwd() #current directory
 root = Tk()
 showName = basename(originalDir) #gets the show name based on the current folder
@@ -140,7 +141,14 @@ for s in range(1,sNum+1): #for loop that goes through each season
 		cPath = os.getcwd() #gets the current directory path
 		#print('cPath = ',cPath)
 		#print(fileN) #prints what the finished file will look like
-		file = open("{path}\\{fileName}".format(path = cPath, fileName = fileN),'w') #creates dummy file named as if it is an episode of the show
+		if OperatingSystem == 'posix': # Linux
+			file = open(r"{path}/{fileName}".format(path = cPath, fileName = fileN),'w') #creates dummy file named as if it is an episode of the show
+		elif OperatingSystem == 'nt': # Windows
+			file = open(r"{path}\{fileName}".format(path = cPath, fileName = fileN),'w') #creates dummy file named as if it is an episode of the show
+		else:
+			print('Unsupported Operating System')
+			quit()
+
 		file.close() #closes the file created in the previous line
 
 os.chdir(originalDir) #sets the directory to the directory used when the program is called
