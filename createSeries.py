@@ -6,7 +6,7 @@ import imdb #run 'pip install IMDbPY' if you do not have the api
 from PIL import ImageTk, Image  # pip install pillow
 import requests
 import pathlib
-import os
+import sys # used for command line arguments
 
 #this program creates season folders of a tv show in the plex format
 #and fills the season folders with mock episode files to test the eSuffixV2.py
@@ -117,11 +117,16 @@ def yesNoExit(answer):
 	else:
 		yesNoExit(input('Wrong input, type y for Yes, n for No, and e for Exit: '))
 
-OperatingSystem = os.name
+if len(sys.argv) < 2:
+	print('No command line argument given for show')
+	quit()
 
-originalDir = os.getcwd() #current directory
+OperatingSystem = os.name
 root = Tk()
-showName = basename(originalDir) #gets the show name based on the current folder
+showName = sys.argv[1] #gets the show name based on the current folder
+os.mkdir(showName)
+os.chdir(showName)
+originalDir = os.getcwd() #current directory
 extention = '.mkv' #the extention of the dummy files
 result = verifySeries(showName, 0)
 series, sNum = seriesInfo(showName, result) #gets the series info set and the number of seasons
