@@ -121,7 +121,7 @@ if len(sys.argv) < 2:
 	print('No command line argument given for show')
 	quit()
 
-OperatingSystem = os.name
+OperatingSystem = os.name # 'posix' for Linux and 'nt' for Windows
 root = Tk()
 showName = sys.argv[1] #gets the show name based on the current folder
 os.mkdir(showName)
@@ -150,7 +150,7 @@ for s in range(1,sNum+1): #for loop that goes through each season
 			file = open(r"{path}/{fileName}".format(path = cPath, fileName = fileN),'w') #creates dummy file named as if it is an episode of the show
 		elif OperatingSystem == 'nt': # Windows
 			file = open(r"{path}\{fileName}".format(path = cPath, fileName = fileN),'w') #creates dummy file named as if it is an episode of the show
-		else:
+		else: # TODO make this check earlier in the code to reduce execution time
 			print('Unsupported Operating System')
 			quit()
 
