@@ -16,10 +16,20 @@ to
 TV show folder and file structure has to follow a specific format.
 The folder structure must be
 
-- Show Name
+─ Show Name
+└── Season X
+    ├── Show Name S01E01.mkv
+    ├── Show Name S01E02.mkv
+    ├── Show Name S01E03.mkv
+    ├── Show Name S01E04.mkv
+    ├── Show Name S01E05.mkv
+    ├── Show Name S01E06.mkv
+    ├── Show Name S01E07.mkv
+    ├── Show Name S01E08.mkv
+    └── Show Name S01E09.mkv
 
-  - Season 1
-    - Show Name S01E01.mkv
+Where X is the Season Number. Also, the extension does not have to be ```.mkv```
+Read the Plex documentation [https://support.plex.tv/articles/naming-and-organizing-your-tv-show-files/](here) for more information
 
 - Python
 - pip
@@ -30,7 +40,7 @@ The folder structure must be
 1. Clone the repo
 
 ```sh
-git clone https://github.com/nolanwinsman/donute-attack.git
+git clone https://github.com/nolanwinsman/episode-title-suffix.git
 ```
 
 2. Install Python modules
@@ -51,12 +61,8 @@ Project Link: [https://github.com/nolanwinsman/episode-title-suffix](https://git
 
 ## Files
 
-- assets : folder to hold game assets, primarily the art.
-- gifs : folder to hold gifs for README
-- sounds : game sounds.
-- data.py : class to hold valuable data like colors.
-- enemy.py : class for the enemy object. This is the donuts
-- hud.py : class for the information displayed like candy canes and score
-- player.py : class for the player
-- README.md : this file
-- requirements.txt : Python modules
+├── createSeries.py : file to generate mock data for testing
+├── eSuffix.py : main script
+├── IMDB.ico : icon used for when the tv show poster displays
+├── README.md : this file
+└── requirements.txt : python modules
