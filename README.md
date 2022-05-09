@@ -9,10 +9,17 @@ to
 
 ## Getting Started
 
-- run game.py and the game should pop up. The resulution can be changed at the top of game.py.
-- the game is designed for a 1920x1080 resolution so other sizes may not perform properly.
+- run
 
 ## Prerequisites
+
+TV show folder and file structure has to follow a specific format.
+The folder structure must be
+
+- Show Name
+
+  - Season 1
+    - Show Name S01E01.mkv
 
 - Python
 - pip
@@ -36,7 +43,7 @@ pip install -r requirements.txt
 
 Nolan Winsman - [@Github](https://github.com/nolanwinsman) - nolanwinsman@gmail.com
 
-Project Link: [https://github.com/nolanwinsman/donute-attack](https://github.com/nolanwinsman/donute-attack)
+Project Link: [https://github.com/nolanwinsman/episode-title-suffix](https://github.com/nolanwinsman/episode-title-suffix)
 
 # Contributers
 
