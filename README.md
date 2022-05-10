@@ -29,7 +29,7 @@ The folder structure must be
         * Show Name S01E09.mkv
 
 Where X is the Season Number. Also, the extension does not have to be ```.mkv```
-Read the Plex documentation [https://support.plex.tv/articles/naming-and-organizing-your-tv-show-files/](here) for more information
+Read the Plex documentation [here](https://support.plex.tv/articles/naming-and-organizing-your-tv-show-files/) for more information
 
 - Python
 - pip
