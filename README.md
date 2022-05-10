@@ -9,24 +9,24 @@ to
 
 ## Getting Started
 
-- run
+- run ```eSuffix.py``` at the root of the TV show folder
 
 ## Prerequisites
 
 TV show folder and file structure has to follow a specific format.
 The folder structure must be
 
-─ Show Name
-└── Season X
-    ├── Show Name S01E01.mkv
-    ├── Show Name S01E02.mkv
-    ├── Show Name S01E03.mkv
-    ├── Show Name S01E04.mkv
-    ├── Show Name S01E05.mkv
-    ├── Show Name S01E06.mkv
-    ├── Show Name S01E07.mkv
-    ├── Show Name S01E08.mkv
-    └── Show Name S01E09.mkv
+* Show Name
+    * Season X
+        * Show Name S01E01.mkv
+        * Show Name S01E02.mkv
+        * Show Name S01E03.mkv
+        * Show Name S01E04.mkv
+        * Show Name S01E05.mkv
+        * Show Name S01E06.mkv
+        * Show Name S01E07.mkv
+        * Show Name S01E08.mkv
+        * Show Name S01E09.mkv
 
 Where X is the Season Number. Also, the extension does not have to be ```.mkv```
 Read the Plex documentation [https://support.plex.tv/articles/naming-and-organizing-your-tv-show-files/](here) for more information
@@ -61,8 +61,8 @@ Project Link: [https://github.com/nolanwinsman/episode-title-suffix](https://git
 
 ## Files
 
-├── createSeries.py : file to generate mock data for testing
-├── eSuffix.py : main script
-├── IMDB.ico : icon used for when the tv show poster displays
-├── README.md : this file
-└── requirements.txt : python modules
+* createSeries.py : file to generate mock data for testing
+* eSuffix.py : main script
+* IMDB.ico : icon used for when the tv show poster displays
+* README.md : this file
+* requirements.txt : python modules
